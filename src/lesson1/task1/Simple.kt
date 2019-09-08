@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson1.task1
 
+import java.lang.Math.pow
 import kotlin.math.*
 
 /**
@@ -110,7 +112,10 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double = TODO()
+fun accountInThreeYears(initial: Int, percent: Int): Double {
+    var per: Double = percent / 100.0
+    return initial * pow((1 + per), 3.0)
+}
 
 /**
  * Простая
@@ -118,4 +123,4 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = TODO()
  * Пользователь задает целое трехзначное число (например, 478).
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int = TODO()
+fun numberRevert(number: Int): Int = thirdDigit(number) + thirdDigit(number*10)*10 + thirdDigit(number*100)*100

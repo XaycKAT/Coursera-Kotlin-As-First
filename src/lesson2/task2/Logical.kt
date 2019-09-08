@@ -1,7 +1,10 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson2.task2
 
 import lesson1.task1.sqr
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 /**
  * Пример
@@ -45,7 +48,12 @@ fun daysInMonth(month: Int, year: Int): Int = TODO()
  * Вернуть true, если утверждение верно
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
-                 x2: Double, y2: Double, r2: Double): Boolean = TODO()
+                 x2: Double, y2: Double, r2: Double): Boolean {
+    var d = sqrt(sqr(x1-x2)+ sqr(y1-y2))
+    if(d <= r2-r1)
+        return true
+    return false
+}
 
 /**
  * Средняя
@@ -56,4 +64,8 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = TODO()
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
+    if(a * b <= r * s || b * c <= r * s || c * a <= r * s)
+        return true
+    return false
+}
