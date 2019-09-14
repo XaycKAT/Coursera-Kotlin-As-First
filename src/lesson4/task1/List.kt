@@ -251,7 +251,15 @@ fun factorizeToString(n: Int): String {
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int>  {
+    var num = mutableListOf<Int>()
+    var m = n
+    while (m > 0){
+        num.add(m%base)
+        m = m / base
+    }
+    return num.asReversed()
+}
 
 /**
  * Сложная
@@ -261,7 +269,18 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    var numList = convert(n,base)
+    var charList = mutableListOf<String>()
+    for(i in numList){
+        if(i < 10)
+            charList.add(i.toString())
+        else
+            charList.add((i+87).toChar().toString())
+
+    }
+    return charList.joinToString(separator = "")
+}
 
 /**
  * Средняя

@@ -171,7 +171,7 @@ class Tests {
         )
         assertEquals(
                 mapOf("MSFT" to 150.0, "NFLX" to 40.0),
-                averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
+                    averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
         )
         assertEquals(
                 mapOf("MSFT" to 150.0, "NFLX" to 45.0),
@@ -308,6 +308,18 @@ class Tests {
         assertEquals(
                 Pair(-1, -1),
                 findSumOfTwo(listOf(1, 2, 3), 6)
+        )
+        assertEquals(
+                Pair(-1, -1),
+                findSumOfTwo(listOf(3, 2, 1), 6)
+        )
+        assertEquals(
+                Pair(1, 5),
+                findSumOfTwo(listOf(1, 2, 3, 4, 5 ,6), 8)
+        )
+        assertEquals(
+                Pair(0, 5),
+                findSumOfTwo(listOf(6,5,4,3,2,1), 7)
         )
     }
 

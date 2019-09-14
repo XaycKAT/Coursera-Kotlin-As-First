@@ -94,7 +94,17 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    var mergeMap = mutableMapOf<String, String>()
+    mergeMap.putAll(mapA)
+    for ((name, phone) in mapB) {
+        if (mergeMap.containsKey(name) && mergeMap[name] != phone)
+            mergeMap[name] = mergeMap[name] + ", $phone"
+        else
+            mergeMap.put(name, phone)
+    }
+    return mergeMap
+}
 
 /**
  * Простая
@@ -106,7 +116,16 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    var gradesNames = mutableMapOf<Int, List<String>>()
+    for ((name, grade) in grades) {
+        if (gradesNames.containsKey(grade))
+            gradesNames[grade] = gradesNames[grade]!!.toMutableList() + name // такой бред :\ через add не пашет
+        else
+            gradesNames.put(grade, listOf(name))
+    }
+    return gradesNames
+}
 
 /**
  * Простая
@@ -118,7 +137,16 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    for ((key, value) in a) {
+        if (!b.containsKey(key))
+            return false
+        if (b.containsKey(key))
+            if (!b[key].equals(a[key]))
+                return false
+    }
+    return true
+}
 
 /**
  * Средняя
@@ -130,7 +158,16 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    var answerMap = mutableMapOf<String, Double>()
+    for ((name, cost) in stockPrices) {
+        if (answerMap.containsKey(name))
+            answerMap[name] = (answerMap[name]!! + cost) / 2.0
+        else
+            answerMap[name] = cost
+    }
+    return answerMap
+}
 
 /**
  * Средняя
@@ -147,7 +184,21 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var name = ""
+    var price = 100000.0
+    for (it in stuff) {
+        if (it.value.first == kind) {
+            if (price > it.value.second) {
+                price = it.value.second
+                name = it.key
+            }
+        }
+    }
+    if (price == 100000.0)
+        return null
+    return name
+}
 
 /**
  * Сложная
@@ -253,7 +304,16 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in 0 until list.size - 2) {
+        for (j in i + 1 until list.size) {
+            if (i != j && list[i] + list[j] == number)
+                return Pair(i, j)
+
+        }
+    }
+    return Pair(-1, -1)
+}
 
 /**
  * Очень сложная
