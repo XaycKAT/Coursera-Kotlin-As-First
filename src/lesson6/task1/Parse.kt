@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import java.lang.IllegalArgumentException
+
 /**
  * Пример
  *
@@ -49,12 +51,10 @@ fun main(args: Array<String>) {
         val seconds = timeStrToSeconds(line)
         if (seconds == -1) {
             println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
+        } else {
             println("Прошло секунд с начала суток: $seconds")
         }
-    }
-    else {
+    } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
@@ -71,7 +71,24 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    if (parts.size < 3)
+        return ""
+    var day = parts[0].toInt()
+    var month = parts[1]
+    var year = parts[2].toInt()
+    if (day > 31 || day < 1 || year > 9999 || year < 1)
+        return ""
+    val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля"
+            , "августа", "сентября", "октября", "ноября", "декабря")
+    if (months.contains(month)) {
+        if (month == months[1] && (year % 400 != 0 || year % 4 != 0))
+            return ""
+        return String.format("%02d.%02d.%04d", day, months.indexOf(month) + 1, year)
+    }
+    return ""
+}
 
 /**
  * Средняя
@@ -132,7 +149,35 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val parts = expression.split(" ")
+    var number: Int
+    try {
+        number = parts[0].toInt()
+
+    } catch (e: java.lang.IllegalArgumentException) {
+        throw e
+    }
+
+    if (parts.size % 2 == 0)
+        throw java.lang.IllegalArgumentException()
+    if (parts.size == 1)
+        return number
+    val s = parts.size - 1;
+    for (i in 1..s step 2) {
+        if (parts[i] != "+" && parts[i] != "-")
+            throw  java.lang.IllegalArgumentException()
+        try {
+            if (parts[i] == "+")
+                number += parts[i + 1].toInt()
+            else
+                number -= parts[i + 1].toInt()
+        } catch (e: java.lang.IllegalArgumentException) {
+            throw e
+        }
+    }
+    return number
+}
 
 /**
  * Сложная
