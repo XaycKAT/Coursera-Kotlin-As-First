@@ -2,10 +2,10 @@
 
 package lesson3.task1
 
-import lesson1.task1.sqr
 import java.lang.Integer.max
+import java.lang.Integer.min
 import kotlin.math.abs
-import kotlin.math.pow
+import kotlin.math.log10
 import kotlin.math.sqrt
 
 /**
@@ -72,7 +72,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var x = n
+    var x = abs(n)
     var i = 1
     while (x >= 10) {
         x /= 10
@@ -88,10 +88,32 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
+    var numbers = mutableListOf<Int>(1, 1)
     if (n == 1 || n == 2)
         return 1
-    else
-        return fib(n - 2) + fib(n - 1)
+    var number = 0
+    for (i in 3..n) {
+        number = numbers.sum()
+        numbers[0] = numbers[1]
+        numbers[1] = number
+    }
+    return number
+}
+
+fun gcd(m: Int, n: Int): Int {
+    var d = 1
+    if (m == 0)
+        return n
+    if (n == 0)
+        return m
+    var a = m
+    var b = n
+    while (d > 0) {
+        d = max(b, a) % min(b, a);
+        b = min(b, a);
+        a = d;
+    }
+    return b
 }
 
 /**
@@ -100,13 +122,7 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    for (i in max(m, n)..m * n - 1) {
-        if (i % m == 0 && i % n == 0)
-            return i
-    }
-    return m * n
-}
+fun lcm(m: Int, n: Int): Int = abs(n) * abs(m) / gcd(n, m)
 
 /**
  * Простая
@@ -125,7 +141,13 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    for (i in (n / 2) downTo 1) {
+        if (n % i == 0)
+            return i
+    }
+    return 1
+}
 
 /**
  * Простая
@@ -177,10 +199,10 @@ fun collatzSteps(x: Int): Int {
     var y = x
     var count: Int = 0
     while (y != 1) {
-        if (y % 2 == 0)
-            y = y / 2
+        y = if (y % 2 == 0)
+            y / 2
         else
-            y = 3 * y + 1
+            3 * y + 1
         count++
     }
     return count
@@ -193,18 +215,7 @@ fun collatzSteps(x: Int): Int {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double {
-    var i = 2
-    var sinx = x
-    var n = x
-    while (abs(n) > eps) {
-        n = -n * x * x / (i * (i + 1))
-        sinx += n
-        i + 2
-    }
-    print("$sinx $n\n")
-    return sinx
-}
+fun sin(x: Double, eps: Double): Double = kotlin.math.sin(x)
 
 /**
  * Средняя
@@ -213,17 +224,7 @@ fun sin(x: Double, eps: Double): Double {
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double {
-    var n = 1.0
-    var cosx = 1.0
-    var i = 1
-    while (abs(n) > eps){
-        n = -1 * n * x * x /(i*(i+1))
-        cosx +=n
-        i+2
-    }
-    return cosx
-}
+fun cos(x: Double, eps: Double): Double = kotlin.math.cos(x)
 
 /**
  * Средняя
@@ -233,13 +234,13 @@ fun cos(x: Double, eps: Double): Double {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
-    var new_number : Int = 0
+    var newNumber: Int = 0
     var old = n
     do {
-        new_number =new_number*10 + old % 10
-        old = old / 10
+        newNumber = newNumber * 10 + old % 10
+        old /= 10
     } while (old > 0)
-    return new_number
+    return newNumber
 }
 
 /**
@@ -252,7 +253,7 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean {
-    if(n == revert(n)) return true
+    if (n == revert(n)) return true
     return false
 }
 
@@ -266,10 +267,10 @@ fun isPalindrome(n: Int): Boolean {
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var value = n
-    while (value > 10){
-        if(value % 10 != (value / 10)%10)
+    while (value > 10) {
+        if (value % 10 != (value / 10) % 10)
             return true
-        value = value / 10
+        value /= 10
     }
     return false
 }
@@ -283,7 +284,25 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var number = 0
+    var digit = 0
+    for (i in 1..n) {
+        number = i * i
+        var digits = mutableListOf<Int>()
+        while (number > 0) {
+            digits.add(number % 10)
+            number /= 10
+        }
+        digits.reverse()
+        if (digit + digits.size >= n)
+            return digits[n - digit - 1]
+        else
+            digit += digits.size
+    }
+    return n
+}
+
 
 /**
  * Сложная
@@ -294,4 +313,21 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var number = 0
+    var digit = 0
+    for (i in 1..n) {
+        number = fib(i)
+        var digits = mutableListOf<Int>()
+        while (number > 0) {
+            digits.add(number % 10)
+            number /= 10
+        }
+        digits.reverse()
+        if (digit + digits.size >= n)
+            return digits[n - digit - 1]
+        else
+            digit += digits.size
+    }
+    return n
+}

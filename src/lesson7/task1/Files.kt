@@ -3,6 +3,8 @@
 package lesson7.task1
 
 import java.io.File
+import java.util.StringTokenizer
+
 
 /**
  * Пример
@@ -32,8 +34,7 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
                 if (word.length + currentLineLength >= lineLength) {
                     outputStream.newLine()
                     currentLineLength = 0
-                }
-                else {
+                } else {
                     outputStream.write(" ")
                     currentLineLength++
                 }
@@ -54,7 +55,24 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    var answerMap = substrings.map { it to 0 }.toMap().toMutableMap()
+    for ((k, v) in answerMap) {
+        var count = 0
+        for (line in File(inputName).readLines()) {
+            var lastIndex = 0
+            while (lastIndex != -1) {
+                lastIndex = line.toUpperCase().indexOf(k.toUpperCase(), lastIndex)
+                if (lastIndex != -1) {
+                    count++
+                    lastIndex += k.length
+                }
+            }
+        }
+        answerMap[k] = count
+    }
+    return answerMap
+}
 
 
 /**
@@ -71,7 +89,64 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    var regLight = Regex(pattern = "[ЖжЧчШшЩщ][ЫыЯяЮю]")
+    var reg = Regex(pattern = "\\S*[ЖжЧчШшЩщ][ЫыЯяЮю]\\S*")
+    var exceptReg = Regex(pattern = "(бро|пара)*[ЖжЧчШшЩщ][ЫыЯяЮю](ра|ри|т)", option = RegexOption.IGNORE_CASE)
+    var currentLineLength = 0
+
+    for (line in File(inputName).readLines()) {
+        currentLineLength = line.length
+        for (word in line.split(" ")) {
+            if (word.matches(reg) && !word.matches(exceptReg)) {
+                val newWord = regLight.replace(word) { m ->
+                    when (m.value[1]) {
+                        'ю' -> (m.value[0] + "у").toString()
+                        'Ю' -> (m.value[0] + "У").toString()
+                        'я' -> (m.value[0] + "а").toString()
+                        'Я' -> (m.value[0] + "А").toString()
+                        'ы' -> (m.value[0] + "и").toString()
+                        else -> (m.value[0] + "И").toString()
+                    }
+                }
+                if (currentLineLength > newWord.length) {
+                    outputStream.write("$newWord ")
+                    currentLineLength -= newWord.length + 1
+                } else {
+                    outputStream.write(newWord)
+                    currentLineLength = 0
+                }
+            } else {
+                if (currentLineLength > word.length){
+                    outputStream.write("$word ")
+                    currentLineLength -= word.length + 1
+                } else {
+                    outputStream.write(word)
+                    currentLineLength = 0
+                }
+            }
+        }
+        outputStream.newLine()
+    }
+    outputStream.close()
+}
+
+fun main(args: Array<String>) {
+    var reg = Regex(pattern = "[ЖжЧчШшЩщ][ЫыЯяЮю]")
+    var exceptReg = Regex(pattern = "(бро|пара)*[ЖжЧчШшЩщ][ЫыЯяЮю](ра|ри|т)", option = RegexOption.IGNORE_CASE)
+    val word = "броШЮра"
+    val match = reg.find(word)!!
+    val n = reg.replace(word) { m ->
+        when (m.value[1]) {
+            'ю' -> (m.value[0] + "у").toString()
+            'Ю' -> (m.value[0] + "У").toString()
+            'я' -> (m.value[0] + "а").toString()
+            'Я' -> (m.value[0] + "А").toString()
+            'ы' -> (m.value[0] + "и").toString()
+            else -> (m.value[0] + "И").toString()
+        }
+    }
+    println(exceptReg.matches(word))
 }
 
 /**
@@ -243,15 +318,15 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * Соответствующий выходной файл:
 <html>
-    <body>
-        <p>
-            Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
-            Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
-        </p>
-        <p>
-            Suspendisse <s>et elit in enim tempus iaculis</s>.
-        </p>
-    </body>
+<body>
+<p>
+Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
+Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
+</p>
+<p>
+Suspendisse <s>et elit in enim tempus iaculis</s>.
+</p>
+</body>
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -294,67 +369,67 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  *
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
-* Утка по-пекински
-    * Утка
-    * Соус
-* Салат Оливье
-    1. Мясо
-        * Или колбаса
-    2. Майонез
-    3. Картофель
-    4. Что-то там ещё
-* Помидоры
-* Фрукты
-    1. Бананы
-    23. Яблоки
-        1. Красные
-        2. Зелёные
+ * Утка по-пекински
+ * Утка
+ * Соус
+ * Салат Оливье
+1. Мясо
+ * Или колбаса
+2. Майонез
+3. Картофель
+4. Что-то там ещё
+ * Помидоры
+ * Фрукты
+1. Бананы
+23. Яблоки
+1. Красные
+2. Зелёные
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  *
  *
  * Соответствующий выходной файл:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
 <html>
-  <body>
-    <ul>
-      <li>
-        Утка по-пекински
-        <ul>
-          <li>Утка</li>
-          <li>Соус</li>
-        </ul>
-      </li>
-      <li>
-        Салат Оливье
-        <ol>
-          <li>Мясо
-            <ul>
-              <li>
-                  Или колбаса
-              </li>
-            </ul>
-          </li>
-          <li>Майонез</li>
-          <li>Картофель</li>
-          <li>Что-то там ещё</li>
-        </ol>
-      </li>
-      <li>Помидоры</li>
-      <li>
-        Фрукты
-        <ol>
-          <li>Бананы</li>
-          <li>
-            Яблоки
-            <ol>
-              <li>Красные</li>
-              <li>Зелёные</li>
-            </ol>
-          </li>
-        </ol>
-      </li>
-    </ul>
-  </body>
+<body>
+<ul>
+<li>
+Утка по-пекински
+<ul>
+<li>Утка</li>
+<li>Соус</li>
+</ul>
+</li>
+<li>
+Салат Оливье
+<ol>
+<li>Мясо
+<ul>
+<li>
+Или колбаса
+</li>
+</ul>
+</li>
+<li>Майонез</li>
+<li>Картофель</li>
+<li>Что-то там ещё</li>
+</ol>
+</li>
+<li>Помидоры</li>
+<li>
+Фрукты
+<ol>
+<li>Бананы</li>
+<li>
+Яблоки
+<ol>
+<li>Красные</li>
+<li>Зелёные</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</body>
 </html>
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -381,23 +456,23 @@ fun markdownToHtml(inputName: String, outputName: String) {
  * Вывести в выходной файл процесс умножения столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 111):
-   19935
-*    111
+19935
+ *    111
 --------
-   19935
+19935
 + 19935
 +19935
 --------
- 2212785
+2212785
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  * Нули в множителе обрабатывать так же, как и остальные цифры:
-  235
-*  10
+235
+ *  10
 -----
-    0
+0
 +235
 -----
- 2350
+2350
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
@@ -411,16 +486,16 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 22):
-  19935 | 22
- -198     906
- ----
-    13
-    -0
-    --
-    135
-   -132
-   ----
-      3
+19935 | 22
+-198     906
+----
+13
+-0
+--
+135
+-132
+----
+3
 
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *

@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import java.lang.Math.pow
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -119,7 +120,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  */
 fun abs(v: List<Double>): Double {
     var mod = 0.0
-    for (element in v){
+    for (element in v) {
         mod += sqr(element)
     }
     return sqrt(mod)
@@ -133,8 +134,8 @@ fun abs(v: List<Double>): Double {
 fun mean(list: List<Double>): Double {
     var sum = 0.0
     for (s in list)
-        sum+=s
-    if(list.size == 0)
+        sum += s
+    if (list.size == 0)
         return 0.0
     return sum / list.size
 }
@@ -151,7 +152,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
     if (list.size == 0)
         return list
     var mean = mean(list)
-    for (i in 0 until list.size){
+    for (i in 0 until list.size) {
         list[i] = list[i] - mean
     }
     return list
@@ -167,8 +168,8 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Double>, b: List<Double>): Double {
     var sum = 0.0
-    for(i in 0 until a.size)
-        sum += a[i]*b[i]
+    for (i in 0 until a.size)
+        sum += a[i] * b[i]
     return sum
 }
 
@@ -183,7 +184,7 @@ fun times(a: List<Double>, b: List<Double>): Double {
 fun polynom(p: List<Double>, x: Double): Double {
     var sum = 0.0
     for (i in 0 until p.size)
-        sum+=p[i]*x.pow(i)
+        sum += p[i] * x.pow(i)
     return sum
 }
 
@@ -199,14 +200,14 @@ fun polynom(p: List<Double>, x: Double): Double {
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
     var newlist = mutableListOf<Double>()
-    for (i in 0 until list.size){
+    for (i in 0 until list.size) {
         var sum = 0.0
-        for(j in 0..i)
-            sum+=list[j]
+        for (j in 0..i)
+            sum += list[j]
         newlist.add(sum)
     }
-    for (i in 0 until list.size){
-        list[i] = newlist [i]
+    for (i in 0 until list.size) {
+        list[i] = newlist[i]
     }
     return list
 }
@@ -251,12 +252,14 @@ fun factorizeToString(n: Int): String {
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int>  {
+fun convert(n: Int, base: Int): List<Int> {
+    if (n == 0)
+        return listOf(0)
     var num = mutableListOf<Int>()
     var m = n
-    while (m > 0){
-        num.add(m%base)
-        m = m / base
+    while (m > 0) {
+        num.add(m % base)
+        m /= base
     }
     return num.asReversed()
 }
@@ -270,13 +273,15 @@ fun convert(n: Int, base: Int): List<Int>  {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    var numList = convert(n,base)
+    if (n == 0)
+        return "0"
+    var numList = convert(n, base)
     var charList = mutableListOf<String>()
-    for(i in numList){
-        if(i < 10)
+    for (i in numList) {
+        if (i < 10)
             charList.add(i.toString())
         else
-            charList.add((i+87).toChar().toString())
+            charList.add((i + 87).toChar().toString())
 
     }
     return charList.joinToString(separator = "")
@@ -289,7 +294,13 @@ fun convertToString(n: Int, base: Int): String {
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var number = 0
+    for (i in digits.indices) {
+        number += digits[i] * base.toDouble().pow(digits.size - i - 1).toInt()
+    }
+    return number
+}
 
 /**
  * Сложная
@@ -300,7 +311,10 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    var characters = str.map { if (it.toInt() > 57) it.toInt() - 39 - 48 else it.toInt() - 48 }.toMutableList()
+    return decimal(characters, base)
+}
 
 /**
  * Сложная

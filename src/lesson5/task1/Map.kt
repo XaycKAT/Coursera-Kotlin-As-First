@@ -160,13 +160,13 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     var answerMap = mutableMapOf<String, Double>()
-    for ((name, cost) in stockPrices) {
-        if (answerMap.containsKey(name))
-            answerMap[name] = (answerMap[name]!! + cost) / 2.0
-        else
-            answerMap[name] = cost
+    for ((key, value) in stockPrices) {
+        var averagePrice: Double = stockPrices.filter { it.first == key }.sumByDouble { it.second } /
+                stockPrices.filter { it.first == key }.count()
+        if (!answerMap.containsKey(key))
+            answerMap[key] = averagePrice
     }
-    return answerMap
+    return answerMap.toMap()
 }
 
 /**
@@ -186,16 +186,16 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var name = ""
-    var price = 100000.0
-    for (it in stuff) {
-        if (it.value.first == kind) {
-            if (price > it.value.second) {
-                price = it.value.second
-                name = it.key
+    var price = -1.0
+    for ((key, value) in stuff) {
+        if (value.first == kind) {
+            if (price > value.second) {
+                price = value.second
+                name = key
             }
         }
     }
-    if (price == 100000.0)
+    if (price == -1.0)
         return null
     return name
 }

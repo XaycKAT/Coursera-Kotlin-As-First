@@ -71,6 +71,7 @@ class Tests {
         assertEquals(2, digitNumber(99))
         assertEquals(3, digitNumber(123))
         assertEquals(10, digitNumber(Int.MAX_VALUE))
+        assertEquals(9, digitNumber(-464161553))
     }
 
     @Test
@@ -111,7 +112,7 @@ class Tests {
         assertEquals(97, minDivisor(97))
         assertEquals(7, minDivisor(49))
         assertEquals(17, minDivisor(8653))
-        assertEquals(2124679 , minDivisor(2124679 ))
+        assertEquals(2124679, minDivisor(2124679))
         assertEquals(1073676287, minDivisor(1073676287))
         assertEquals(Int.MAX_VALUE, minDivisor(Int.MAX_VALUE))
     }
@@ -125,7 +126,7 @@ class Tests {
         assertEquals(17, maxDivisor(34))
         assertEquals(7, maxDivisor(49))
         assertEquals(509, maxDivisor(8653))
-        assertEquals(1 , maxDivisor(2124679 ))
+        assertEquals(1, maxDivisor(2124679))
         assertEquals(1, maxDivisor(1073676287))
         assertEquals(1, maxDivisor(Int.MAX_VALUE))
     }
@@ -139,6 +140,7 @@ class Tests {
         assertFalse(isCoPrime(37, 111))
         assertTrue(isCoPrime(1234567890, 908765431))
         assertTrue(isCoPrime(2109876543, 1234567891))
+        assertFalse(isCoPrime(67509, 83649))
     }
 
     @Test
@@ -174,10 +176,11 @@ class Tests {
     @Tag("Normal")
     fun sin() {
         assertEquals(0.0, sin(0.0, 1e-5), 1e-5)
-        assertEquals(1.0, sin(PI / 2.0, 1e-5),  1e-5)
+        assertEquals(1.0, sin(PI / 2.0, 1e-5), 1e-5)
         assertEquals(0.0, sin(PI, 1e-5), 1e-5)
         assertEquals(-1.0, sin(3.0 * PI / 2.0, 1e-5), 1e-5)
         assertEquals(0.0, sin(100 * PI, 1e-5), 1e-5)
+        assertEquals(0.9961946980766563, sin(14.224433403753785, 1.0E-10), 1e-5)
     }
 
     @Test
@@ -188,6 +191,7 @@ class Tests {
         assertEquals(-1.0, cos(PI, 1e-5), 1e-5)
         assertEquals(0.0, cos(3.0 * PI / 2.0, 1e-5), 1e-5)
         assertEquals(1.0, cos(100 * PI, 1e-5), 1e-5)
+        assertEquals(-0.945518575614341, cos(16.03957582582789, 1.0000022204460493E-10), 1e-5)
     }
 
     @Test
@@ -240,5 +244,6 @@ class Tests {
         assertEquals(2, fibSequenceDigit(9))
         assertEquals(5, fibSequenceDigit(14))
         assertEquals(2, fibSequenceDigit(20))
+        assertEquals(0, fibSequenceDigit(233))
     }
 }

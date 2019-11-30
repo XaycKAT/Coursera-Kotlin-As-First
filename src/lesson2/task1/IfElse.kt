@@ -5,6 +5,7 @@ package lesson2.task1
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import java.lang.Math.pow
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
 import kotlin.math.pow
@@ -66,7 +67,12 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String = when {
+    age % 100 in 5..20 -> "$age лет"
+    age % 10 == 1 -> "$age год"
+    age % 10 in 2..4 -> "$age года"
+    else -> "$age лет"
+}
 
 /**
  * Простая
@@ -81,8 +87,8 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val halfDistance = (t1 * v1 + t2 * v2 + t3 * v3) / 2.0
     return when {
         halfDistance <= t1 * v1 -> halfDistance / v1
-        halfDistance <= t1 * v1 + t2 * v2 -> (halfDistance -t1*v1)/ v2 + t1
-        halfDistance <= t1 * v1 + t2 * v2 + t3 * v3 -> (halfDistance-t2*v2-t1*v1) / v3 + t1 + t2
+        halfDistance <= t1 * v1 + t2 * v2 -> (halfDistance - t1 * v1) / v2 + t1
+        halfDistance <= t1 * v1 + t2 * v2 + t3 * v3 -> (halfDistance - t2 * v2 - t1 * v1) / v3 + t1 + t2
         else -> Double.NaN
     }
 
@@ -100,7 +106,16 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int = TODO()
+                       rookX2: Int, rookY2: Int): Int {
+    return if ((kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2))
+        3
+    else if (kingX == rookX1 || kingY == rookY1)
+        1
+    else if (kingX == rookX2 || kingY == rookY2)
+        2
+    else
+        0
+}
 
 /**
  * Простая
@@ -125,14 +140,14 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    val sides = mutableListOf(a,b,c)
+    val sides = mutableListOf(a, b, c)
     sides.sort()
-    val check = sqr(sides[2])- sqr(sides[1])- sqr(sides[0])
-    if(sides[2] > sides[1] + sides[0])
+    val check = sqr(sides[2]) - sqr(sides[1]) - sqr(sides[0])
+    if (sides[2] > sides[1] + sides[0])
         return -1
-    if(check > 0)
+    if (check > 0)
         return 2
-    if(check < 0)
+    if (check < 0)
         return 0
     else
         return 1
@@ -147,14 +162,14 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if(c > b || a > d)
-        return -1
-    else if(c < a && b < d)
-        return b-a
-    else if(a < c && d < b)
-        return d-c
-    else if(d > b)
-        return b-c
+    return if (c > b || a > d)
+        -1
+    else if (c < a && b < d)
+        b - a
+    else if (a <= c && d <= b)
+        d - c
+    else if (d > b)
+        b - c
     else
-        return d-a
+        d - a
 }
